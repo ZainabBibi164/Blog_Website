@@ -3,5 +3,6 @@ pillow
 whitenoise
 gunicorn
 psycopg2-binary
-ckeditor
 django-ckeditor
+dj-database-url
+python-dotenv
