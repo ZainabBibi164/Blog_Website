@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - Advanced Blog{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Search Results for "{{ query }}"</h1>
+    
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        {% if post.featured_image %}
+                            <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'blog:post_detail' post.slug %}" class="text-decoration-none">
+                                    {{ post.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">
+                                By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Search results pages" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page=1">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            No posts found matching your search criteria.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

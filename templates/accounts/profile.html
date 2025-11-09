@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - {{ profile.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" class="img-fluid rounded-circle mb-3" alt="{{ profile.username }}">
+                {% else %}
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width:120px;height:120px;font-size:36px;">
+                        {{ profile.username|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+
+                <h4 class="mt-2">{{ profile.get_full_name|default:profile.username }}</h4>
+                <p class="text-muted">Role: {{ profile.get_role_display }}</p>
+                {% if profile.bio %}
+                    <p>{{ profile.bio }}</p>
+                {% endif %}
+
+                <a href="{% url 'accounts:profile_edit' %}" class="btn btn-sm btn-outline-primary">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>My Posts</h5>
+            </div>
+            <div class="card-body">
+                {% if posts %}
+                    <ul class="list-unstyled">
+                        {% for post in posts %}
+                            <li class="mb-3">
+                                <h6><a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a></h6>
+                                <small class="text-muted">{{ post.created_at|date:"F d, Y" }} • {{ post.get_status_display }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">You haven't published any posts yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Account Activity</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Recent activity is tracked in your dashboard.</p>
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-sm btn-outline-secondary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
