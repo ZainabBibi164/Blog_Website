@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import dj_database_url
+
+# Load environment variables from .env when present (local dev)
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +26,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b)mb4x*=g3z*x1423k%d7dx87a8+h0uflr47+3fththjte+3gb'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-b)mb4x*=g3z*x1423k%d7dx87a8+h0uflr47+3fththjte+3gb')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = []
+# Allow configuration of hosts via environment variable (comma separated)
+allowed = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [h.strip() for h in allowed.split(',') if h.strip()]
+
+# When behind a proxy (like Railway), honor X-Forwarded-Proto for secure redirects
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -87,6 +98,13 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Use DATABASE_URL when provided (Railway Postgres). Falls back to sqlite.
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    DATABASES = {
+        'default': dj_database_url.parse(database_url, conn_max_age=600)
+    }
 
 
 # Password validation
