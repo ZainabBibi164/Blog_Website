@@ -7,10 +7,19 @@
     <div class="col-md-4">
         <div class="card mb-4">
             <div class="card-body text-center">
+
                 {% if profile.profile_picture %}
-                    <img src="{{ profile.profile_picture.url }}" class="img-fluid rounded-circle mb-3" alt="{{ profile.username }}">
+                    <!-- Medium Circle -->
+                    <img src="{{ profile.profile_picture.url }}" class="rounded-circle mb-2" alt="{{ profile.username }}" style="width:120px;height:120px;object-fit:cover;">
+                    <!-- Small Circle -->
+                    <img src="{{ profile.profile_picture.url }}" class="rounded-circle mb-2" alt="{{ profile.username }}" style="width:40px;height:40px;object-fit:cover;">
                 {% else %}
-                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width:120px;height:120px;font-size:36px;">
+                    <!-- Medium Circle Placeholder -->
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:120px;height:120px;font-size:36px;">
+                        {{ profile.username|slice:":1"|upper }}
+                    </div>
+                    <!-- Small Circle Placeholder -->
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:40px;height:40px;font-size:16px;">
                         {{ profile.username|slice:":1"|upper }}
                     </div>
                 {% endif %}
