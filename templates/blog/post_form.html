@@ -7,6 +7,59 @@
 
 {% block extra_css %}
     {{ form.media.css }}
+    <style>
+        /* Editor and form enhancements for create/edit post page */
+        .editor-wrapper {
+            border: 1px solid #e9ecef;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(44,62,80,0.03);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Target common editor containers (CKEditor 4/5) and textarea fallback */
+        .editor-wrapper .ck-editor__editable,
+        .editor-wrapper .cke_contents,
+        .editor-wrapper .cke_wysiwyg_frame,
+        .editor-wrapper textarea {
+            min-height: 360px !important;
+            max-height: 80vh;
+            overflow: auto;
+            text-align: justify;
+            padding: 0.8rem;
+            line-height: 1.7;
+            font-size: 1rem;
+            color: #2c3e50;
+            background: transparent;
+        }
+
+        /* Make inputs, selects and file inputs visually consistent */
+        .card-body input[type="text"],
+        .card-body input[type="email"],
+        .card-body input[type="file"],
+        .card-body select,
+        .card-body textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e6e9ee;
+            border-radius: 0.5rem;
+            box-shadow: none;
+            background-clip: padding-box;
+        }
+
+        .card-body label.form-label {
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .form-text {
+            color: #6c757d;
+        }
+
+        /* Slightly larger submit button */
+        .btn-primary.btn-lg { padding: 0.6rem 1.25rem; }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -30,10 +83,13 @@
 
                     <div class="mb-3">
                         <label for="id_content" class="form-label">Content</label>
-                        {{ form.content }}
+                        <div class="editor-wrapper">
+                            {{ form.content }}
+                        </div>
                         {% if form.content.errors %}
                             <div class="form-error">{{ form.content.errors|striptags }}</div>
                         {% endif %}
+                        <small class="form-text">Write your post here. Use the editor toolbar for formatting — the content will appear justified on the site.</small>
                     </div>
 
                     <div class="row">

@@ -161,6 +161,11 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'full',
         'height': 300,
         'width': '100%',
+        # Load a small contents CSS so the editor iframe matches site styling
+        # (use absolute/static path so CKEditor can fetch it)
+        'contentsCss': ['/static/css/editor_contents.css'],
+        # Apply editor body class so we can target editor content if needed
+        'bodyClass': 'ck-content',
     },
 }
 
