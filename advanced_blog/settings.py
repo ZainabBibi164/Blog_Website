@@ -33,7 +33,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
 # Allow configuration of hosts via environment variable (comma separated)
 allowed = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in allowed.split(',') if h.strip()]
+ALLOWED_HOSTS = ['blogwebsite-production-6910.up.railway.app', '.railway.app', '127.0.0.1', 'localhost']
 
 # When behind a proxy (like Railway), honor X-Forwarded-Proto for secure redirects
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
