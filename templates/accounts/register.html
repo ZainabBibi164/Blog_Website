@@ -31,8 +31,12 @@
                             {% elif field.name == 'password1' or field.name == 'password2' %}
                                 <div class="input-group">
                                     <input type="password" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control {% if field.errors %}is-invalid{% endif %}" {% if field.value %}value="{{ field.value }}"{% endif %}>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('{{ field.id_for_label }}')">
-                                        <span class="fa fa-eye"></span>
+                                    <button type="button" id="toggle-{{ field.id_for_label }}" class="btn btn-outline-secondary" onclick="togglePassword('{{ field.id_for_label }}')" aria-label="Toggle password visibility" title="Show password">
+                                        <!-- inline SVG eye icon -->
+                                        <svg id="icon-{{ field.id_for_label }}" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+                                        </svg>
                                     </button>
                                 </div>
                             {% else %}
@@ -49,18 +53,37 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% if field.name == 'password1' %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% else %}
+                                    <small class="form-text text-muted">Use a strong password — at least 8 characters, mix letters and numbers.</small>
+                                {% endif %}
+                            {% elif field.name == 'password2' %}
+                                <small class="form-text text-muted">Confirm password — re-enter the same password for verification.</small>
+                            {% else %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endfor %}
                     <script>
                         function togglePassword(id) {
                             var input = document.getElementById(id);
+                            var btn = document.getElementById('toggle-' + id);
+                            var icon = document.getElementById('icon-' + id);
+                            if (!input || !btn || !icon) return;
                             if (input.type === "password") {
                                 input.type = "text";
+                                btn.title = 'Hide password';
+                                // eye-slash icon (simple path)
+                                icon.innerHTML = '<path d="M13.359 11.238C14.133 10.3 15 9.045 15 8c0-.8-.9-2.3-2.5-3.9L13 3.6C14.9 5.5 16 7.6 16 8s-1.133 2.567-2.641 3.641l-.0-.403z"/>';
                             } else {
                                 input.type = "password";
+                                btn.title = 'Show password';
+                                // eye icon (original)
+                                icon.innerHTML = '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>';
                             }
                         }
                     </script>
